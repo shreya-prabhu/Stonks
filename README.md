@@ -1,1 +1,1 @@
-# QuickMedOn
+# Stock Broker Application
