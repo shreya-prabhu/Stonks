@@ -105,5 +105,14 @@ def admin_profile():
         cursor.execute('SELECT * FROM admin_profile WHERE username = % s', (session['username'], ))
         account = cursor.fetchone()
         return render_template("admin_profile.html", account = account)
+def company_1():
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM CompanyDB')
+        account = cursor.fetchall()
+
+        return render_template("Company.html", account = account,len=len(account))
+
+    return render_template('login.html')
 if __name__ == "__main__":
     app.run(debug=True)
