@@ -125,7 +125,7 @@ def search():
                 cursor.execute("SELECT * from CompanyDB")
                 data = cursor.fetchall()
             return render_template('search.html', data=data)
-    return render_template('login.html')
+    return render_template('search.html')
 # end point for inserting data dynamicaly in the database
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
