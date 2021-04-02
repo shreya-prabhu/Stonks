@@ -115,16 +115,21 @@ def company_1():
 #endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    if 'loggedin' in session:
-        if request.method == "POST":
-            companyname = request.form['companyname']
-            cursor = mysql.connection.cursor()
-            cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
+    if request.method == "POST":
+        companyname = request.form['companyname']
+        #companyname=string(companyname)
+        # search by author or book
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
+        #cursor.commit()
+        data = cursor.fetchall()
+        # all in the search box will return all the tuples
+        if len(data) == 0 and companyname == 'all':
+            cursor.execute("SELECT * from CompanyDB")
+
             data = cursor.fetchall()
-            if len(data) == 0 and companyname == 'all':
-                cursor.execute("SELECT * from CompanyDB")
-                data = cursor.fetchall()
-            return render_template('search.html', data=data)
+
+        return render_template('search.html', data=data)
     return render_template('search.html')
 # end point for inserting data dynamicaly in the database
 @app.route('/insert', methods=['GET', 'POST'])
