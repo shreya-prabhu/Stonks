@@ -139,6 +139,6 @@ def insert():
         cursor.execute('INSERT INTO CompanyDB VALUES ( %s, %s, %s, %s, %s)', (CompanyName1, SecurityNo1, Limited_Stock_Exchange1, Rate1, No_of_shares1, ))
         mysql.connection.commit()
         return redirect("http://localhost:5000/search", code=302)
-    return render_template('login.html')
+    return render_template('insert.html')
 if __name__ == "__main__":
     app.run(debug=True)
