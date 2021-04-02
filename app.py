@@ -112,25 +112,33 @@ def company_1():
         account = cursor.fetchall()
 
         return render_template("Company.html", account = account,len=len(account))
+#endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    if request.method == "POST":
-        companyname = request.form['companyname']
-        #companyname=string(companyname)
-       
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
-        #cursor.commit()
-        data = cursor.fetchall()
-        # all in the search box will return all the tuples
-        if len(data) == 0 and companyname == 'all':
-            cursor.execute("SELECT * from CompanyDB")
-
+    if 'loggedin' in session:
+        if request.method == "POST":
+            companyname = request.form['companyname']
+            cursor = mysql.connection.cursor()
+            cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
             data = cursor.fetchall()
-            
-        return render_template('search.html', data=data)
-    return render_template('search.html')
-
+            if len(data) == 0 and companyname == 'all':
+                cursor.execute("SELECT * from CompanyDB")
+                data = cursor.fetchall()
+            return render_template('search.html', data=data)
+    return render_template('login.html')
+# end point for inserting data dynamicaly in the database
+@app.route('/insert', methods=['GET', 'POST'])
+def insert():
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        CompanyName1 = request.form['CompanyName']
+        SecurityNo1 = request.form['SecurityNo']
+        Limited_Stock_Exchange1 = request.form['Limited_Stock_Exchange']
+        Rate1 = request.form['Rate']
+        No_of_shares1 = request.form['No_of_shares']
+        cursor.execute('INSERT INTO CompanyDB VALUES ( %s, %s, %s, %s, %s)', (CompanyName1, SecurityNo1, Limited_Stock_Exchange1, Rate1, No_of_shares1, ))
+        mysql.connection.commit()
+        return redirect("http://localhost:5000/search", code=302)
     return render_template('login.html')
 if __name__ == "__main__":
     app.run(debug=True)
