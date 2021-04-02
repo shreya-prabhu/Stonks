@@ -1,0 +1,35 @@
+<!-- Search Bar -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-
+        scale=1">
+        <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-
+        awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/index.css">
+    </head>
+    <body>
+        <h1><center>CompanyInfo</center></h1>
+        <form class="example" method="post" action=""
+         style="margin:auto;max-width:600px">
+            <input type="text" placeholder="Search by company name all the data" name="companyname">
+            <button type="submit"><i class="fa fa-search"></i>
+            </button>
+        </form>
+        <p></p>
+        <center>
+        {% for item in data %}
+            <tr>
+              <td> {{item}} </td><br>
+              <td> For {{item['CName']}} </td><br>
+                <td> {{item['SecurityNo']}} </td><br>
+                <td> {{item['Limited_Stock_Exchange']}} </td><br>
+                <td> {{item['Rate']}} </td><br>
+                <td> {{item['No_of_shares']}} </td><br>
+                </br>
+            </tr>
+        {% endfor %}
+        </center>
+    </body>
+</html>
