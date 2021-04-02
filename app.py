@@ -112,6 +112,24 @@ def company_1():
         account = cursor.fetchall()
 
         return render_template("Company.html", account = account,len=len(account))
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == "POST":
+        companyname = request.form['companyname']
+        #companyname=string(companyname)
+       
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
+        #cursor.commit()
+        data = cursor.fetchall()
+        # all in the search box will return all the tuples
+        if len(data) == 0 and companyname == 'all':
+            cursor.execute("SELECT * from CompanyDB")
+
+            data = cursor.fetchall()
+            
+        return render_template('search.html', data=data)
+    return render_template('search.html')
 
     return render_template('login.html')
 if __name__ == "__main__":
