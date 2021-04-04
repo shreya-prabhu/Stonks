@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'your secret key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] ='password'
+app.config['MYSQL_PASSWORD'] ='root'
 app.config['MYSQL_DB'] = 'stonks'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
@@ -52,7 +52,6 @@ def login_admin():
             return render_template('dashboard.html', msg = msg)
     return render_template('login.html')
 '''
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -65,11 +64,8 @@ def login():
         if account:
             msg = 'Logged in successfully !'
             return render_template('admin_dashboard.html', msg = msg)
-
     return render_template('login.html')
-
     #return render_template('login.html', error=error)
-
 old login page
 @app.route("/login1")
 def login1():
@@ -98,6 +94,7 @@ def transactions():
 @app.route("/profile")
 def profile():
     return render_template('profile.html')
+
 @app.route("/admin_profile")
 def admin_profile():
     if 'loggedin' in session:
@@ -110,8 +107,8 @@ def company_1():
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM CompanyDB')
         account = cursor.fetchall()
-
         return render_template("Company.html", account = account,len=len(account))
+    
 #endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -126,11 +123,10 @@ def search():
         # all in the search box will return all the tuples
         if len(data) == 0 and companyname == 'all':
             cursor.execute("SELECT * from CompanyDB")
-
             data = cursor.fetchall()
-
         return render_template('search.html', data=data)
     return render_template('search.html')
+
 # end point for inserting data dynamicaly in the database
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
@@ -145,5 +141,32 @@ def insert():
         mysql.connection.commit()
         return redirect("http://localhost:5000/search", code=302)
     return render_template('insert.html')
+
+@app.route('/client_insert', methods=['GET', 'POST'])
+def client_insert():
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        fullname = request.form['fullname']
+        dob = request.form['dob']
+        email = request.form['email']
+        phonenumber = request.form['phonenumber']
+        username = request.form['username']
+        password = request.form['password']
+        aadharnumber = request.form['aadharnumber']
+        pannumber = request.form['pannumber']
+        securitycode = request.form['securitycode']
+        dpid = request.form['dpid']
+        bankacc = request.form['bankacc']
+        bankname= request.form['bankname']
+        bankifsc = request.form['bankifsc']
+        banktype = request.form['banktype']
+        cursor.execute('INSERT INTO client_profile VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (fullname, dob, email, phonenumber, username, password, aadharnumber, pannumber, securitycode, dpid , bankacc))
+        mysql.connection.commit()
+        cursor.execute('INSERT INTO bank_details VALUES ( %s ,%s, %s, %s )' ,( bankname, bankacc, bankifsc, banktype))
+        mysql.connection.commit()
+        return redirect("http://localhost:5000/login", code=302)
+    return render_template('register.html')
+    
 if __name__ == "__main__":
     app.run(debug=True)
+    
