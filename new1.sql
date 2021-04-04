@@ -27,7 +27,7 @@ VALUES
 ("Company3","9XGH14","hhsjwj",6.9,10000),
 ("Company4","9XGH15","1AAAAAA",-8.7,500);
 
-CREATE TABLE client_profile(
+CREATE TABLE if not exists client_profile(
 Name VARCHAR(255)  NOT NULL,
 DOB date, 
 email_id varchar(40) unique not null,
@@ -41,7 +41,7 @@ DP_ID varchar(10) not null,
 Bank_acc_no varchar(10) not null unique,
 PRIMARY KEY(username));
 
-Create table bank_details(
+Create table if not exists bank_details(
 Name Varchar(255) Not NULL,
 Bank_acc_no varchar(10) not null unique,
 bank_ifsc_no varchar(12) not null,
