@@ -26,3 +26,25 @@ VALUES
 ("Company2","9XGH13","ddddAAA",5,11),
 ("Company3","9XGH14","hhsjwj",6.9,10000),
 ("Company4","9XGH15","1AAAAAA",-8.7,500);
+
+CREATE TABLE client_profile(
+Name VARCHAR(255)  NOT NULL,
+DOB date, 
+email_id varchar(40) unique not null,
+phone_no varchar(10) unique not null,
+username varchar(15) unique NOT NULL,
+password varchar(20) not null,
+aadhar_no varchar(12) unique not null,
+pan_no varchar(10) unique not null,
+security_code varchar(20) not null,
+DP_ID varchar(10) not null,
+Bank_acc_no varchar(10) not null unique,
+PRIMARY KEY(username));
+
+Create table bank_details(
+Name Varchar(255) Not NULL,
+Bank_acc_no varchar(10) not null unique,
+bank_ifsc_no varchar(12) not null,
+account_type varchar(20) not null,
+PRIMARY KEY(Bank_acc_no),
+FOREIGN KEY (Bank_acc_no) REFERENCES client_profile(Bank_acc_no));
