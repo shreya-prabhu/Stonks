@@ -90,17 +90,6 @@ def dashboard():
 def explorestocks():
     return render_template('explorestocks.html')
 
-"""@app.route('/') 
-def index(): 
-    #create a cursor
-    cursor = conn.cursor() 
-    #execute select statement to fetch data to be displayed in combo/dropdown
-    cursor.execute('SELECT JobID,JobName FROM jobs') 
-    #fetch all rows ans store as a set of tuples 
-    joblist = cursor.fetchall() 
-    #render template and send the set of tuples to the HTML file for displaying
-    return render_template("input.html",joblist=joblist )
-"""
 @app.route("/buy_stock")
 def buy_stock():
     cursor = mysql.connection.cursor()
