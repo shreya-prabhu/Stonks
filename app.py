@@ -88,7 +88,10 @@ def dashboard():
 
 @app.route("/explorestocks")
 def explorestocks():
-    return render_template('explorestocks.html')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT SCode, CName, Price FROM stocks;')
+    stocklist = cursor.fetchall()
+    return render_template('explorestocks.html', stocks = stocklist)
 
 @app.route("/buy_stock")
 def buy_stock():
