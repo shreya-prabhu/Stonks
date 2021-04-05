@@ -1,9 +1,10 @@
+
 import sqlite3
 from flask import Flask, render_template,request,redirect,url_for,session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -13,11 +14,13 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] ='root'
 app.config['MYSQL_DB'] = 'stonks'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+T_ID=100
 
 mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    
     return render_template('index.html')
 
 @app.route("/register")
@@ -43,13 +46,17 @@ def login_admin():
             msg = 'Logged in successfully !'
             session['loggedin'] = True
             #session['id'] = account['id']
+            session['username'] = request.form['username']
             session['username'] = account['username']
+            session['T_ID'] = 0
             return render_template('admin_dashboard.html', msg = msg)
         cursor.execute('SELECT * FROM client_profile WHERE username = % s AND password = % s', (username, password, ))
         account = cursor.fetchone()
         if account:
-            msg = 'Logged in successfully !'
-            return render_template('dashboard.html', msg = msg)
+            #msg = 'Logged in successfully !'
+            session['T_ID'] = 0
+            session['username'] = request.form['username']
+            return redirect("http://localhost:5000/dashboard", code=302)
     return render_template('login.html')
 '''
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,13 +90,48 @@ def dashboard():
 def explorestocks():
     return render_template('explorestocks.html')
 
+"""@app.route('/') 
+def index(): 
+    #create a cursor
+    cursor = conn.cursor() 
+    #execute select statement to fetch data to be displayed in combo/dropdown
+    cursor.execute('SELECT JobID,JobName FROM jobs') 
+    #fetch all rows ans store as a set of tuples 
+    joblist = cursor.fetchall() 
+    #render template and send the set of tuples to the HTML file for displaying
+    return render_template("input.html",joblist=joblist )
+"""
+@app.route("/buy_stock")
+def buy_stock():
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT SCode, Price FROM stocks;')
+    stocklist = cursor.fetchall()
+    return render_template('buy.html', stocks=stocklist)
+
+@app.route("/sell_stock")
+def sell_stock():
+    cursor = mysql.connection.cursor()
+    username =session['username']
+    cursor.execute('SELECT SCode, quantity FROM stock_customer where CName = %s;',[username])
+    stocklist = cursor.fetchall()
+    cursor.execute('SELECT SCode, quantity FROM stock_customer where CName = %s;',[username])
+    Scode = cursor.fetchone()
+    cursor.execute('Select Price FROM stocks where SCode =%s;', [Scode['SCode']])
+    Price = cursor.fetchall()
+    print(stocklist)
+    return render_template('sell.html', stocks =stocklist, price = Price)
+
 @app.route("/trade")
 def trade():
     return render_template('trade.html')
 
-@app.route("/transactions")
-def transactions():
-    return render_template('transactions.html')
+@app.route("/user_transaction")
+def user_transaction():
+    cursor = mysql.connection.cursor()
+    username = session['username']
+    cursor.execute('SELECT T_ID, T_Time, T_Date, T_type, SCode, Quantity FROM transactions where CName = %s;', [username])
+    transactionlist = cursor.fetchall()
+    return render_template('transactions.html', transactions = transactionlist)
 
 @app.route("/profile")
 def profile():
@@ -166,6 +208,95 @@ def client_insert():
         mysql.connection.commit()
         return redirect("http://localhost:5000/login", code=302)
     return render_template('register.html')
+
+@app.route('/buy_check', methods=['GET', 'POST'])
+def buy_check():
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        username = session['username']
+        num1 = request.form['num1']
+        num1 =int(num1)
+        stockid = request.form.get('name')
+        stockid= str(stockid)
+        cursor.execute('SELECT CName FROM stocks WHERE SCode = %s ', [stockid])
+        query1 = cursor.fetchone()
+        company= query1['CName']
+        cursor.execute('SELECT No_of_shares FROM CompanyDB WHERE CName = %s ', [company])
+        query2 = cursor.fetchone()
+        number= int(query2['No_of_shares'])
+        if num1<number:
+            num2= number-num1
+            cursor.execute('UPDATE CompanyDB SET No_of_shares = %s WHERE CName =%s;',(num2,company))
+            mysql.connection.commit()
+            cursor.execute('SELECT quantity FROM stock_customer WHERE CName = %s AND SCode =%s', (username,stockid))
+            query3=cursor.fetchone()
+            if query3:
+                num2 = int(query3['quantity'])
+                cursor.execute('UPDATE stock_customer SET quantity = %s WHERE CName =%s AND SCode =%s;',(num1+num2,username,stockid))
+            else:
+                cursor.execute('Insert into stock_customer values(%s,%s,%s)',(stockid,username,num1))
+            mysql.connection.commit()
+            cursor.execute('SELECT T_ID FROM transactions WHERE CName = %s', (username,))
+            query4 = cursor.fetchall()
+            if query4:
+                session['T_ID'] = int(query4[len(query4)-1]['T_ID'])+1
+                T_ID =session['T_ID']
+            else:
+                T_ID = session['T_ID'] =0
+            session['T_ID'] = session['T_ID']+1
+            dateTimeObj = datetime.now()
+            T_Time=str(dateTimeObj.hour)+':'+str(dateTimeObj.minute)+':'+str(dateTimeObj.second)+'.'+str(dateTimeObj.microsecond)
+            T_Date= str(dateTimeObj.year)+'-'+str(dateTimeObj.month)+'-'+str(dateTimeObj.day)
+            T_type ="Buy"
+            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(T_ID,username, T_Time, T_Date, T_type, stockid, num1))
+            mysql.connection.commit()
+            return redirect("http://localhost:5000/user_transaction", code=302)
+        return redirect("http://localhost:5000/dashboard", code=302)
+
+
+@app.route('/sell_check', methods=['GET', 'POST'])
+def sell_check():
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        username = session['username']
+        num1 = request.form['num1']
+        num1 =int(num1)
+        stockid = request.form.get('name')
+        stockid= str(stockid)
+        cursor.execute('SELECT CName FROM stocks WHERE SCode = %s ', [stockid])
+        query1 = cursor.fetchone()
+        company= query1['CName']
+        cursor.execute('SELECT No_of_shares FROM CompanyDB WHERE CName = %s ', [company])
+        query2 = cursor.fetchone()
+        number= int(query2['No_of_shares'])
+        if num1<number:
+            num2= number-num1
+            cursor.execute('UPDATE CompanyDB SET No_of_shares = %s WHERE CName =%s;',(num2,company))
+            mysql.connection.commit()
+            cursor.execute('SELECT quantity FROM stock_customer WHERE CName = %s AND SCode =%s', (username,stockid))
+            query3=cursor.fetchone()
+            if query3:
+                num2 = int(query3['quantity'])
+                cursor.execute('UPDATE stock_customer SET quantity = %s WHERE CName =%s AND SCode =%s;',(num1+num2,username,stockid))
+            else:
+                cursor.execute('Insert into stock_customer values(%s,%s,%s)',(stockid,username,num1))
+            mysql.connection.commit()
+            cursor.execute('SELECT T_ID FROM transactions WHERE CName = %s', (username,))
+            query4 = cursor.fetchall()
+            if query4:
+                session['T_ID'] = int(query4[len(query4)-1]['T_ID'])+1
+                T_ID =session['T_ID']
+            else:
+                T_ID = session['T_ID'] =0
+            session['T_ID'] = session['T_ID']+1
+            dateTimeObj = datetime.now()
+            T_Time=str(dateTimeObj.hour)+':'+str(dateTimeObj.minute)+':'+str(dateTimeObj.second)+'.'+str(dateTimeObj.microsecond)
+            T_Date= str(dateTimeObj.year)+'-'+str(dateTimeObj.month)+'-'+str(dateTimeObj.day)
+            T_type ="Buy"
+            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(T_ID,username, T_Time, T_Date, T_type, stockid, num1))
+            mysql.connection.commit()
+            return redirect("http://localhost:5000/transactions", code=302)
+        return redirect("http://localhost:5000/dashboard", code=302)
     
 if __name__ == "__main__":
     app.run(debug=True)
