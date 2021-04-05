@@ -1,6 +1,6 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 <html>
-  <nav class="navbar navbar-dark bg-info">
+  <nav class="navbar navbar-dark bg-success">
   <ul class="nav nav-tabs">
       <li class="nav-item">
         <a class="nav-link  text-white" href="/dashboard">Dashboard</a>
@@ -26,5 +26,38 @@
 
     </ul>
   </nav>
-
+  <br><br><br><br>
+  <body>
+    <h2 style="text-align: center;">Stock Details</h2><br>
+      <div class="container-sm-1" style="margin-left: 30%;">
+          <table style="width: auto;text-align: center;" class="table table table-bordered table-responsive">
+            <thead >
+          <tr >
+            <th scope="col" class="col-sm-3" >Stock ID </th>
+            <th scope="col" class="col-sm-0" >Price Per Stock </th>
+            <th scope="col" class="col-sm-2">Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr >
+          {% for j in stocks %}
+          <td >{{j['SCode']}}</td>
+          <td>{{j['Price']}}</td>
+          <td>{{j['CName']}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+      <br><br><br>
+      </div>
+      <div class="row mb-3" style="margin-left: 23%;">
+        <label for="acctype3" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-3">
+          <a role="button" class="btn btn-success" href="/buy_stock">Buy Stocks</a>
+        </div>
+        <div class="col-sm-3">
+          <a role="button" class="btn btn-info" href="/sell_stock">Sell Stocks</a>
+        </div>
+      </div>
+      </body>
 </html>
