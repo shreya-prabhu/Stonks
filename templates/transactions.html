@@ -31,5 +31,31 @@
     
       </ul>
       </nav>
-  
+      <div class="container-sm" align-items-center><br><br>
+      <h1 style="text-align: center;">Transactions</h1><br><br>
+      <table class="table table-hover table-dark">
+        <thead>
+      <tr>
+        <th scope="col">Transaction ID </th>
+        <th scope="col">Transaction Time </th>
+        <th scope="col">Transaction Date </th>
+        <th scope="col">Type </th>
+        <th scope="col">Stock_Code </th>
+        <th scope="col">Quantity </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for j in transactions %}
+      <tr>
+        <th scope="row">{{j['T_ID'] }}</th>
+        <td>{{j['T_Time']}}</td>
+        <td>{{j['T_Date']}}</td>
+        <td>{{j['T_type']}}</td>
+        <td>{{j['SCode']}}</td>
+        <td>{{j['Quantity']}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  </table>
+  </div>
 </html>

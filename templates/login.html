@@ -7,7 +7,6 @@
         </span>
     </nav>
 
-    <div class="container-sm" align-items-center>
       <html>
       <head>
         <title>Flask Intro - login page</title>
@@ -15,15 +14,26 @@
         <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
       </head>
       <body>
-        <div class="container">
+        <div class="container-sm" align-items-center>
           <h1>Please login</h1>
           <br>
           <form action="" method="post">
-            <input type="text" placeholder="Username" name="username" value="{{
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">Username</label>
+              <div class="col-sm-5">
+                <input type="text" placeholder="Username" name="username" value="{{
               request.form.username }}">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label">Password</label>
+              <div class="col-sm-5">
              <input type="password" placeholder="Password" name="password" value="{{
               request.form.password }}">
-            <input class="btn btn-default" type="submit" value="Login">
+            </div>
+          </div>
+
+          <input class="btn btn-primary" type="submit" value="Login">
           </form>
           {% if error %}
             <p class="error"><strong>Error:</strong> {{ error }}
@@ -31,6 +41,3 @@
         </div>
       </body>
     </html>
-
-    </div>
-  </html>
