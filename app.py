@@ -112,14 +112,10 @@ def buy_stock():
 def sell_stock():
     cursor = mysql.connection.cursor()
     username =session['username']
-    cursor.execute('SELECT SCode, quantity FROM stock_customer where CName = %s;',[username])
+    cursor.execute('SELECT stock_customer.SCode, quantity, Price FROM stock_customer INNER JOIN stocks ON stock_customer.SCode = stocks.SCode where stock_customer.CName = %s;',[username])
     stocklist = cursor.fetchall()
-    cursor.execute('SELECT SCode, quantity FROM stock_customer where CName = %s;',[username])
-    Scode = cursor.fetchone()
-    cursor.execute('Select Price FROM stocks where SCode =%s;', [Scode['SCode']])
-    Price = cursor.fetchall()
     print(stocklist)
-    return render_template('sell.html', stocks =stocklist, price = Price)
+    return render_template('sell.html', stocks =stocklist)
 
 @app.route("/trade")
 def trade():
@@ -263,23 +259,26 @@ def sell_check():
         num1 =int(num1)
         stockid = request.form.get('name')
         stockid= str(stockid)
-        cursor.execute('SELECT CName FROM stocks WHERE SCode = %s ', [stockid])
+        cursor.execute('SELECT quantity FROM stock_customer WHERE SCode = %s ', [stockid])
         query1 = cursor.fetchone()
-        company= query1['CName']
-        cursor.execute('SELECT No_of_shares FROM CompanyDB WHERE CName = %s ', [company])
-        query2 = cursor.fetchone()
-        number= int(query2['No_of_shares'])
-        if num1<number:
-            num2= number-num1
+        if query1:
+            quantity= int(query1['quantity'])
+            if(num1-quantity>0):
+                msg="Quantity is more than that bought"
+                return render_template("/dashboard.html", code=302,msg=msg)
+            cursor.execute('SELECT CName FROM stocks WHERE SCode = %s ', [stockid])
+            query1 = cursor.fetchone()
+            company= query1['CName']
+            cursor.execute('SELECT No_of_shares FROM CompanyDB WHERE CName = %s ', [company])
+            query2 = cursor.fetchone()
+            number= int(query2['No_of_shares'])
+            num2= number+num1
             cursor.execute('UPDATE CompanyDB SET No_of_shares = %s WHERE CName =%s;',(num2,company))
             mysql.connection.commit()
-            cursor.execute('SELECT quantity FROM stock_customer WHERE CName = %s AND SCode =%s', (username,stockid))
-            query3=cursor.fetchone()
-            if query3:
-                num2 = int(query3['quantity'])
-                cursor.execute('UPDATE stock_customer SET quantity = %s WHERE CName =%s AND SCode =%s;',(num1+num2,username,stockid))
+            if(quantity-num1 !=0):
+                cursor.execute('UPDATE stock_customer SET quantity = %s WHERE CName =%s AND SCode =%s;',(quantity-num1,username,stockid))
             else:
-                cursor.execute('Insert into stock_customer values(%s,%s,%s)',(stockid,username,num1))
+                cursor.execut('DELETE from stock_customer where CName =%s AND SCode =%s;',(username,stockid))
             mysql.connection.commit()
             cursor.execute('SELECT T_ID FROM transactions WHERE CName = %s', (username,))
             query4 = cursor.fetchall()
@@ -292,10 +291,10 @@ def sell_check():
             dateTimeObj = datetime.now()
             T_Time=str(dateTimeObj.hour)+':'+str(dateTimeObj.minute)+':'+str(dateTimeObj.second)+'.'+str(dateTimeObj.microsecond)
             T_Date= str(dateTimeObj.year)+'-'+str(dateTimeObj.month)+'-'+str(dateTimeObj.day)
-            T_type ="Buy"
+            T_type ="Sell"
             cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(T_ID,username, T_Time, T_Date, T_type, stockid, num1))
             mysql.connection.commit()
-            return redirect("http://localhost:5000/transactions", code=302)
+            return redirect("http://localhost:5000/user_transaction", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
     
 if __name__ == "__main__":
