@@ -1,3 +1,4 @@
+DROP DATABASE if exists stonks;
 CREATE DATABASE if not exists stonks;
 USE stonks;
 DROP TABLE if exists admin_profile;
@@ -13,24 +14,24 @@ VALUES
 INSERT INTO admin_profile(id,username,password)
 VALUES
 ("2","B@gmail.com","password");
-	    
+
 CREATE TABLE CompanyDB(
 CName VARCHAR(255)  NOT NULL UNIQUE,
 SecurityNo VARCHAR(50) NOT NULL UNIQUE ,
 Limited_Stock_Exchange  VARCHAR(255) NOT NULL,
 No_of_shares int(11) NOT NULL,
 PRIMARY KEY(CName));
-	    
-INSERT INTO CompanyDB(CName,SecurityNo,Limited_Stock_Exchange,Rate,No_of_shares)
+
+INSERT INTO CompanyDB(CName,SecurityNo,Limited_Stock_Exchange,No_of_shares)
 VALUES
-("Company1","9XGH12","NSE",56.7,10000),
-("Company2","9XGH13","BSE",5,10000),
-("Company3","9XGH14","BSE",6.9,10000),
-("Company4","9XGH15","NSE",-8.7,10000);
+("Company1","9XGH12","NSE",10000),
+("Company2","9XGH13","BSE",10000),
+("Company3","9XGH14","BSE",10000),
+("Company4","9XGH15","NSE",10000);
 
 CREATE TABLE if not exists client_profile(
 FName VARCHAR(255)  NOT NULL,
-DOB date, 
+DOB date,
 email_id varchar(40) unique not null,
 phone_no varchar(10) unique not null,
 username varchar(15) unique NOT NULL,
@@ -83,10 +84,10 @@ FOREIGN KEY(CName) REFERENCES client_profile(username)
 ON UPDATE CASCADE ON DELETE CASCADE);
 
 DELIMITER //
-CREATE TRIGGER display_stock_changes 
-BEFORE UPDATE ON CompanyDB FOR EACH ROW 
-BEGIN  
-	IF OLD.No_of_shares <= 200 THEN 
+CREATE TRIGGER display_stock_changes
+BEFORE UPDATE ON CompanyDB FOR EACH ROW
+BEGIN
+	IF OLD.No_of_shares <= 200 THEN
     SIGNAL SQLSTATE '45000'
 	SET MESSAGE_TEXT = 'Share not available';
     END IF;
