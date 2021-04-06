@@ -13,13 +13,14 @@ VALUES
 INSERT INTO admin_profile(id,username,password)
 VALUES
 ("2","B@gmail.com","password");
+	    
 CREATE TABLE CompanyDB(
 CName VARCHAR(255)  NOT NULL UNIQUE,
 SecurityNo VARCHAR(50) NOT NULL UNIQUE ,
 Limited_Stock_Exchange  VARCHAR(255) NOT NULL,
-Rate float(11) NOT NULL,
 No_of_shares int(11) NOT NULL,
 PRIMARY KEY(CName));
+	    
 INSERT INTO CompanyDB(CName,SecurityNo,Limited_Stock_Exchange,Rate,No_of_shares)
 VALUES
 ("Company1","9XGH12","NSE",56.7,10000),
@@ -56,8 +57,7 @@ CName VARCHAR(255)  NOT NULL UNIQUE,
 SDescription Varchar(255),
 Price float(2)  not null,
 Primary Key(SCode),
-FOREIGN KEY (CName) REFERENCES CompanyDB(CName),
-FOREIGN KEY (Price) REFERENCES CompanyDB(Rate)
+FOREIGN KEY (CName) REFERENCES CompanyDB(CName)
 ON UPDATE CASCADE ON DELETE CASCADE);
 
 Create table if not exists stock_customer(
