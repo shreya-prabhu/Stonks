@@ -32,20 +32,53 @@
   <br><br>
   <div class="card" style="width: 70rem;">
     <div class="card-body">
-      <h5 class="card-title"> firstname    lastname  </h5>
-      <h6 class="card-subtitle mb-2 text-muted"> username:  </h6>
+      
+      <h5 class="card-title"> Name : {{ account['FName']}} </h5>
+      <h6 class="card-subtitle mb-2 text-muted"> username: {{account['username']}} </h6>
+      <table class="table table-bordered">
+        <thead>
+          <!-- <tr>
+            <th scope="col">Field</th>
+            <th scope="col">Value</th>
+ 
+          </tr> -->
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">DP ID</th>
+            <td>{{account['DP_ID']}}</td>
+          </tr>
+          <tr>
+            <th scope="row">AADHAR No</th>
+            <td>{{account['aadhar_no']}}</td>
+          </tr>
+          <tr>
+            <th scope="row">PAN No</th>
+            <td colspan="2">{{account['pan_no']}}</td>
+          </tr>
 
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item">DP ID ': '</li>
-        <li class="list-group-item">AADHAR No': '</li>
-        <li class="list-group-item">PAN No ': ' </li>
-        <li class="list-group-item">Security Code ': ' </li>
-        <li class="list-group-item">Phone No ': ' </li>
+          <tr>
+            <th scope="row">Security Code</th>
+            <td colspan="2">{{account['security_code']}}</td>
+          </tr>
+
+          <tr>
+            <th scope="row">Phone No</th>
+            <td colspan="2">{{account['phone_no']}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <ul class="list-group list-group-flush">
+        <li class="list-group-item">DP ID : {{account['DP_ID']}}</li>
+        <li class="list-group-item">AADHAR No :{{account['aadhar_no']}} </li>
+        <li class="list-group-item">PAN No :  {{account['pan_no']}}</li>
+        <li class="list-group-item">Security Code :  {{account['security_code']}}</li>
+        <li class="list-group-item">Phone No :  {{account['phone_no']}}</li> -->
 
       </ul>
 
       <div class="card-footer">
-        <a href="/update.html" role= "button" class="btn btn-info">Update Profile</a>
+        <a href="/update_client" role= "button" class="btn btn-info">Update Profile</a>
       </div>
       
     </div>
