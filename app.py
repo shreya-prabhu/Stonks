@@ -11,16 +11,16 @@ app = Flask(__name__)
 app.secret_key = 'your secret key'
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] ='password'
+app.config['MYSQL_PASSWORD'] ='root'
 app.config['MYSQL_DB'] = 'stonks'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-T_ID=100
+
 
 mysql = MySQL(app)
 
 @app.route('/')
 def index():
-
+    
     return render_template('index.html')
 
 @app.route("/register")
@@ -132,23 +132,16 @@ def admin_profile():
         cursor.execute('SELECT * FROM admin_profile WHERE username = % s', (session['username'], ))
         account = cursor.fetchone()
         return render_template("admin_profile.html", account = account)
-    return render_template('login.html')
-@app.route("/Company")
 def company_1():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM CompanyDB')
         account = cursor.fetchall()
-
         return render_template("Company.html", account = account,len=len(account))
-
-    return redirect('login')
-
+    
 #endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
     if request.method == "POST":
         companyname = request.form['companyname']
         #companyname=string(companyname)
@@ -160,62 +153,24 @@ def search():
         # all in the search box will return all the tuples
         if len(data) == 0 and companyname == 'all':
             cursor.execute("SELECT * from CompanyDB")
-
             data = cursor.fetchall()
-
         return render_template('search.html', data=data)
     return render_template('search.html')
 
 # end point for inserting data dynamicaly in the database
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         CompanyName1 = request.form['CompanyName']
         SecurityNo1 = request.form['SecurityNo']
         Limited_Stock_Exchange1 = request.form['Limited_Stock_Exchange']
-
+        Rate1 = request.form['Rate']
         No_of_shares1 = request.form['No_of_shares']
-        cursor.execute('INSERT INTO CompanyDB VALUES (  %s, %s, %s, %s)', (CompanyName1, SecurityNo1, Limited_Stock_Exchange1, No_of_shares1, ))
+        cursor.execute('INSERT INTO CompanyDB VALUES ( %s, %s, %s, %s, %s)', (CompanyName1, SecurityNo1, Limited_Stock_Exchange1, Rate1, No_of_shares1, ))
         mysql.connection.commit()
         return redirect("http://localhost:5000/search", code=302)
     return render_template('insert.html')
-@app.route("/Delete", methods=['GET', 'POST'])
-def delete():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
-    if request.method == "POST":
-        cursor = mysql.connection.cursor()
-        CompanyName1 = request.form['CompanyName']
-        cursor.execute('DELETE from CompanyDB WHERE CName = %s', [CompanyName1])
-        mysql.connection.commit()
-        return redirect("http://localhost:5000/Company", code=302)
-    return render_template('Delete.html')
-@app.route("/update", methods =['GET', 'POST'])
-def update():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
-    msg = ''
-    if 'loggedin' in session:
-        if request.method == 'POST' and 'oldCName' in request.form and 'CName' in request.form and 'SecurityNo' in request.form and 'Limited_Stock_Exchange' in request.form and 'No_of_shares' in request.form:
-            CName1 = request.form['oldCName']
-            CName2 = request.form['CName']
-            SecurityNo1 = request.form['SecurityNo']
-            Limited_Stock_Exchange1 = request.form['Limited_Stock_Exchange']
-
-            No_of_shares1 = request.form['No_of_shares']
-            cursor = mysql.connection.cursor()
-            cursor.execute('SELECT * FROM CompanyDB WHERE CName = % s', (CName1, ))
-            account = cursor.fetchone()
-            cursor.execute('UPDATE companydb SET  CName =% s, SecurityNo =% s, Limited_Stock_Exchange =% s, No_of_shares =% s WHERE CName =% s',(CName2, SecurityNo1, Limited_Stock_Exchange1, No_of_shares1,CName1))
-            mysql.connection.commit()
-            msg = 'You have successfully updated !'
-        elif request.method == 'POST':
-            msg = 'Please fill out the form !'
-        return render_template("update.html", msg = msg)
-    return render_template('update.html')
 
 @app.route('/client_insert', methods=['GET', 'POST'])
 def client_insert():
@@ -247,6 +202,7 @@ def buy_check():
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         username = session['username']
+        print(session['username'])
         num1 = request.form['num1']
         num1 =int(num1)
         stockid = request.form.get('name')
@@ -269,19 +225,19 @@ def buy_check():
             else:
                 cursor.execute('Insert into stock_customer values(%s,%s,%s)',(stockid,username,num1))
             mysql.connection.commit()
-            cursor.execute('SELECT T_ID FROM transactions WHERE CName = %s', (username,))
-            query4 = cursor.fetchall()
-            if query4:
-                session['T_ID'] = int(query4[len(query4)-1]['T_ID'])+1
-                T_ID =session['T_ID']
-            else:
-                T_ID = session['T_ID'] =0
-            session['T_ID'] = session['T_ID']+1
+            #cursor.execute('SELECT T_ID FROM transactions')
+            #query4 = cursor.fetchall()
+            #if query4:
+            #    session['T_ID'] = int(query4[len(query4)-1]['T_ID'])+1
+            #    T_ID =session['T_ID']
+            #else:
+            #    T_ID = session['T_ID'] =0
+            #session['T_ID'] = session['T_ID']+1
             dateTimeObj = datetime.now()
             T_Time=str(dateTimeObj.hour)+':'+str(dateTimeObj.minute)+':'+str(dateTimeObj.second)+'.'+str(dateTimeObj.microsecond)
             T_Date= str(dateTimeObj.year)+'-'+str(dateTimeObj.month)+'-'+str(dateTimeObj.day)
             T_type ="Buy"
-            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(T_ID,username, T_Time, T_Date, T_type, stockid, num1))
+            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(0,username, T_Time, T_Date, T_type, stockid, num1))
             mysql.connection.commit()
             return redirect("http://localhost:5000/user_transaction", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
@@ -317,22 +273,25 @@ def sell_check():
             else:
                 cursor.execut('DELETE from stock_customer where CName =%s AND SCode =%s;',(username,stockid))
             mysql.connection.commit()
-            cursor.execute('SELECT T_ID FROM transactions WHERE CName = %s', (username,))
+            cursor.execute('SELECT T_ID FROM transactions')
             query4 = cursor.fetchall()
+            """
             if query4:
                 session['T_ID'] = int(query4[len(query4)-1]['T_ID'])+1
                 T_ID =session['T_ID']
             else:
                 T_ID = session['T_ID'] =0
             session['T_ID'] = session['T_ID']+1
+            """
             dateTimeObj = datetime.now()
             T_Time=str(dateTimeObj.hour)+':'+str(dateTimeObj.minute)+':'+str(dateTimeObj.second)+'.'+str(dateTimeObj.microsecond)
             T_Date= str(dateTimeObj.year)+'-'+str(dateTimeObj.month)+'-'+str(dateTimeObj.day)
             T_type ="Sell"
-            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(T_ID,username, T_Time, T_Date, T_type, stockid, num1))
+            cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(0,username, T_Time, T_Date, T_type, stockid, num1))
             mysql.connection.commit()
             return redirect("http://localhost:5000/user_transaction", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
-
+    
 if __name__ == "__main__":
     app.run(debug=True)
+    
