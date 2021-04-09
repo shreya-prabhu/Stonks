@@ -113,17 +113,34 @@ def sell_stock():
 def trade():
     return render_template('trade.html')
 
-@app.route("/user_transaction")
-def user_transaction():
+@app.route("/transactions")
+def transactions():
     cursor = mysql.connection.cursor()
     username = session['username']
-    cursor.execute('SELECT T_ID, T_Time, T_Date, T_type, SCode, Quantity FROM transactions where CName = %s;', [username])
-    transactionlist = cursor.fetchall()
-    return render_template('transactions.html', transactions = transactionlist)
+    cursor.execute('Select CName from Stocks;')
+    companieslist = cursor.fetchall()
+
+    for company in companieslist:
+        company_name = company["CName"]
+        print("company",company_name)
+
+        cursor.execute('SELECT T.T_ID,T.CName, T.T_Time,T.T_Date,T.T_type,S.SCode,T.Quantity,S.CName as Company_Name,S.SDescription,S.Price, round(T.Quantity*S.Price,2) as total \
+            from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName=%s order by Company_Name',[username]);
+        transactionlist = cursor.fetchall()
+    return render_template('transactions.html', transactions = transactionlist, companies = companieslist)
+     
+
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html')
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        username = session['username']
+        cursor.execute('SELECT * FROM client_profile WHERE username = % s;', username)
+        account = cursor.fetchone()
+        return render_template("profile.html", account = account)
+
+    # return render_template("profile.html")
 
 @app.route("/admin_profile")
 def admin_profile():
@@ -239,7 +256,7 @@ def buy_check():
             T_type ="Buy"
             cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(0,username, T_Time, T_Date, T_type, stockid, num1))
             mysql.connection.commit()
-            return redirect("http://localhost:5000/user_transaction", code=302)
+            return redirect("http://localhost:5000/transactions", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
 
 
@@ -289,9 +306,13 @@ def sell_check():
             T_type ="Sell"
             cursor.execute('Insert into transactions values(%s,%s,%s,%s,%s,%s,%s)',(0,username, T_Time, T_Date, T_type, stockid, num1))
             mysql.connection.commit()
-            return redirect("http://localhost:5000/user_transaction", code=302)
+            return redirect("http://localhost:5000/transactions", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
     
 if __name__ == "__main__":
     app.run(debug=True)
     
+
+
+        
+        
