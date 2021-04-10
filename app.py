@@ -19,7 +19,7 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
-    
+
     return render_template('index.html')
 
 @app.route("/register")
@@ -64,10 +64,14 @@ def logout():
 
 @app.route("/dashboard")
 def dashboard():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     return render_template('dashboard.html')
 
 @app.route("/explorestocks")
 def explorestocks():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT SCode, CName, Price FROM stocks;')
     stocklist = cursor.fetchall()
@@ -75,6 +79,8 @@ def explorestocks():
 
 @app.route("/buy_stock")
 def buy_stock():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT SCode, Price FROM stocks;')
     stocklist = cursor.fetchall()
@@ -82,6 +88,8 @@ def buy_stock():
 
 @app.route("/sell_stock")
 def sell_stock():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     cursor = mysql.connection.cursor()
     username =session['username']
     cursor.execute('SELECT stock_customer.SCode, quantity, Price FROM stock_customer INNER JOIN stocks ON stock_customer.SCode = stocks.SCode where stock_customer.CName = %s;',[username])
@@ -91,10 +99,14 @@ def sell_stock():
 
 @app.route("/trade")
 def trade():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     return render_template('trade.html')
 
 @app.route("/transactions")
 def transactions():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     cursor = mysql.connection.cursor()
     username = session['username']
     cursor.execute(' SELECT S.CName from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName = %s;',[username])
@@ -113,12 +125,14 @@ def transactions():
             from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName=%s order by Company_Name',[username]);
         transactionlist = cursor.fetchall()
     return render_template('transactions.html', transactions = transactionlist, companies = comp)
-     
+
 
 
 @app.route("/profile")
 def profile():
-     if 'loggedin' in session:
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
+    if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         username = session['username']
         print("i am ", username)
@@ -126,19 +140,21 @@ def profile():
         account = cursor.fetchone()
         return render_template("profile.html", account = account)
 @app.route("/update_client", methods =['GET', 'POST'])
-def update():
+def update_client():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     msg = ''
     if 'loggedin' in session:
         if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
-            phonenumber = request.form['phonenumber']  
+            phonenumber = request.form['phonenumber']
             dpid = request.form['dpid']
             bankname = request.form['bankname']
             bankacc = request.form['bankacc']
-            bankifsc = request.form['bankifsc']    
-            banktype = request.form['banktype'] 
+            bankifsc = request.form['bankifsc']
+            banktype = request.form['banktype']
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
             account = cursor.fetchone()
@@ -161,12 +177,14 @@ def update():
 
 @app.route("/admin_profile")
 def admin_profile():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM admin_profile WHERE username = %s', (session['username'], ))
         account = cursor.fetchone()
         return render_template("admin_profile.html", account = account)
-    
+
 @app.route("/Company")
 def company_1():
     if 'loggedin' in session:
@@ -176,7 +194,7 @@ def company_1():
 
         return render_template("Company.html", account = account,len=len(account))
 
-    return redirect('login')    
+    return redirect('login')
 #endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -185,7 +203,6 @@ def search():
     if request.method == "POST":
         companyname = request.form['companyname']
         #companyname=string(companyname)
-	@@ -153,24 +160,62 @@ def search():
         # all in the search box will return all the tuples
         if len(data) == 0 and companyname == 'all':
             cursor.execute("SELECT * from CompanyDB")
@@ -250,6 +267,8 @@ def update():
 
 @app.route('/client_insert', methods=['GET', 'POST'])
 def client_insert():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         fullname = request.form['fullname']
@@ -275,6 +294,8 @@ def client_insert():
 
 @app.route('/buy_check', methods=['GET', 'POST'])
 def buy_check():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         username = session['username']
@@ -293,7 +314,6 @@ def buy_check():
             num2= number-num1
             cursor.execute('UPDATE CompanyDB SET No_of_shares = %s WHERE CName =%s;',(num2,company))
             mysql.connection.commit()
-            cursor.execute('SELECT quantity FROM stock_customer WHERE CName = %s AND SCode =%s', (username,stockid))
             query3=cursor.fetchone()
             if query3:
                 num2 = int(query3['quantity'])
@@ -321,6 +341,8 @@ def buy_check():
 
 @app.route('/sell_check', methods=['GET', 'POST'])
 def sell_check():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         username = session['username']
@@ -367,30 +389,6 @@ def sell_check():
             mysql.connection.commit()
             return redirect("http://localhost:5000/transactions", code=302)
         return redirect("http://localhost:5000/dashboard", code=302)
-    
+
 if __name__ == "__main__":
     app.run(debug=True)
-    
-
-
-        
-        
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM admin_profile WHERE username = % s AND password = % s', (username, password, ))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Logged in successfully !'
-            return render_template('admin_dashboard.html', msg = msg)
-    return render_template('login.html')
-    #return render_template('login.html', error=error)
-old login page
-@app.route("/login1")
-def login1():
-    return render_template('login1.html')'''
