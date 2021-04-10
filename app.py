@@ -203,6 +203,11 @@ def search():
     if request.method == "POST":
         companyname = request.form['companyname']
         #companyname=string(companyname)
+        # search by author or book
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * from CompanyDB WHERE CName = %s', [companyname])
+        #cursor.commit()
+        data = cursor.fetchall()
         # all in the search box will return all the tuples
         if len(data) == 0 and companyname == 'all':
             cursor.execute("SELECT * from CompanyDB")
@@ -211,7 +216,6 @@ def search():
 
         return render_template('search.html', data=data)
     return render_template('search.html')
-
 # end point for inserting data dynamicaly in the database
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
@@ -228,8 +232,6 @@ def insert():
         mysql.connection.commit()
         return redirect("http://localhost:5000/search", code=302)
     return render_template('insert.html')
-
-
 @app.route("/Delete", methods=['GET', 'POST'])
 def delete():
     if 'loggedin' not in session:
