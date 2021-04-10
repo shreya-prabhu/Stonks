@@ -64,7 +64,7 @@ def logout():
 
 @app.route("/dashboard")
 def dashboard():
-    if 'loggedin' not in session:
+    if session['loggedin'] == False:
         return redirect("http://localhost:5000/login")
     return render_template('dashboard.html')
 
@@ -139,6 +139,7 @@ def profile():
         cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
         account = cursor.fetchone()
         return render_template("profile.html", account = account)
+    
 @app.route("/update_client", methods =['GET', 'POST'])
 def update_client():
     if 'loggedin' not in session:
@@ -150,26 +151,17 @@ def update_client():
             password = request.form['password']
             email = request.form['email']
             phonenumber = request.form['phonenumber']
-            dpid = request.form['dpid']
-            bankname = request.form['bankname']
-            bankacc = request.form['bankacc']
-            bankifsc = request.form['bankifsc']
-            banktype = request.form['banktype']
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor = mysql.connection.cursor()
             cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
             account = cursor.fetchone()
             if account:
-                msg = 'Account already exists !'
-            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-                msg = 'Invalid email address !'
-            elif not re.match(r'[A-Za-z0-9]+', username):
-                msg = 'name must contain only characters and numbers !'
-            else:
-                cursor.execute('UPDATE client_profile SET  username =% s, password =% s, email =% s, \
-                    phonenumber =%s,dpid = %s,bankname =%s,bankacc=%s,bankifsc=%s,banktype=%s,\
-                        WHERE id =% s',(username,password,email,phonenumber,dpid,bankname,bankacc,bankifsc,banktype, (session['id'], ), ))
-                mysql.connection.commit()
-                msg = 'You have successfully updated !'
+                if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                    msg = 'Invalid email address !'
+                else:
+                    cursor.execute('UPDATE client_profile SET  username =%s, password =%s, email_id =%s,phone_no =%s WHERE username =% s',(username,password,email,phonenumber,session['username']  ))
+                    mysql.connection.commit()
+                    msg = 'You have successfully updated !'
+                    return redirect(url_for('dashboard'))
         elif request.method == 'POST':
             msg = 'Please fill out the form !'
         return render_template("update_client.html", msg = msg)
@@ -243,6 +235,7 @@ def delete():
         mysql.connection.commit()
         return redirect("http://localhost:5000/Company", code=302)
     return render_template('Delete.html')
+
 @app.route("/update", methods =['GET', 'POST'])
 def update():
     if 'loggedin' not in session:
@@ -371,7 +364,7 @@ def sell_check():
             if(quantity-num1 !=0):
                 cursor.execute('UPDATE stock_customer SET quantity = %s WHERE CName =%s AND SCode =%s;',(quantity-num1,username,stockid))
             else:
-                cursor.execut('DELETE from stock_customer where CName =%s AND SCode =%s;',(username,stockid))
+                cursor.execute('DELETE from stock_customer where CName =%s AND SCode =%s;',(username,stockid))
             mysql.connection.commit()
             cursor.execute('SELECT T_ID FROM transactions')
             query4 = cursor.fetchall()
