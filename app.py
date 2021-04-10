@@ -50,34 +50,15 @@ def login_admin():
             session['username'] = account['username']
             session['T_ID'] = 0
             return render_template('admin_dashboard.html', msg = msg)
+
         cursor.execute('SELECT * FROM client_profile WHERE username = % s AND password = % s', (username, password, ))
         account = cursor.fetchone()
         if account:
-            #msg = 'Logged in successfully !'
-            session['T_ID'] = 0
+            session['loggedin'] = True
             session['username'] = request.form['username']
             return redirect("http://localhost:5000/dashboard", code=302)
     return render_template('login.html')
-'''
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM admin_profile WHERE username = % s AND password = % s', (username, password, ))
-        account = cursor.fetchone()
-        if account:
-            msg = 'Logged in successfully !'
-            return render_template('admin_dashboard.html', msg = msg)
-    return render_template('login.html')
-    #return render_template('login.html', error=error)
-old login page
-@app.route("/login1")
-def login1():
-    return render_template('login1.html')
-'''
+
 @app.route("/logout")
 def logout():
     return render_template('index.html')
@@ -117,36 +98,40 @@ def trade():
 def transactions():
     cursor = mysql.connection.cursor()
     username = session['username']
-    cursor.execute('Select CName from Stocks;')
+    cursor.execute(' SELECT S.CName from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName = %s;',[username])
     companieslist = cursor.fetchall()
-
-    for company in companieslist:
+    comp = []
+    for c in companieslist:
+        if c not in comp:
+            comp.append(c)
+    # companieslist = companieslist.values()
+    # comp = set(comp)
+    for company in comp:
         company_name = company["CName"]
         print("company",company_name)
 
         cursor.execute('SELECT T.T_ID,T.CName, T.T_Time,T.T_Date,T.T_type,S.SCode,T.Quantity,S.CName as Company_Name,S.SDescription,S.Price, round(T.Quantity*S.Price,2) as total \
             from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName=%s order by Company_Name',[username]);
         transactionlist = cursor.fetchall()
-    return render_template('transactions.html', transactions = transactionlist, companies = companieslist)
+    return render_template('transactions.html', transactions = transactionlist, companies = comp)
      
 
 
 @app.route("/profile")
 def profile():
-    if 'loggedin' in session:
+     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         username = session['username']
-        cursor.execute('SELECT * FROM client_profile WHERE username = % s;', username)
+        print("i am ", username)
+        cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
         account = cursor.fetchone()
         return render_template("profile.html", account = account)
-
-    # return render_template("profile.html")
 
 @app.route("/admin_profile")
 def admin_profile():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT * FROM admin_profile WHERE username = % s', (session['username'], ))
+        cursor.execute('SELECT * FROM admin_profile WHERE username = %s', (session['username'], ))
         account = cursor.fetchone()
         return render_template("admin_profile.html", account = account)
 def company_1():
@@ -316,3 +301,22 @@ if __name__ == "__main__":
 
         
         
+'''
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM admin_profile WHERE username = % s AND password = % s', (username, password, ))
+        account = cursor.fetchone()
+        if account:
+            msg = 'Logged in successfully !'
+            return render_template('admin_dashboard.html', msg = msg)
+    return render_template('login.html')
+    #return render_template('login.html', error=error)
+old login page
+@app.route("/login1")
+def login1():
+    return render_template('login1.html')'''

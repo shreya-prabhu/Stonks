@@ -16,9 +16,7 @@
           <a class="nav-link active text-dark" aria-current="page" href="#">My Transactions</a>
         </li>
         
-        <li class="nav-item">
-            <a class="nav-link  text-white" text-white  href="/trade">Trade</a>
-        </li>
+        
     
         <li class="nav-item">
             <a class="nav-link  text-white" text-white href="/explorestocks">Explore Stocks</a>
@@ -35,10 +33,10 @@
       <!-- <h3>Total Bought : buy</h3>
       <h3>Total Sold : sell </h3> -->
         
-      {% for i in companies %}
-        <h4>Your transactions under {{i['CName']}}</h4>
+      
         <br>
-        
+        {% for i in companies %} 
+        <h4> Your Transactions under {{i['CName']}}</h4>
       <table class="table table-hover table-dark">
         
         <thead>
@@ -73,7 +71,7 @@
           <td>{{j['total']}}</td>
       </tr>
       {% endif %}
-      {% endfor %}
+      {% endfor %} 
 
   </tbody>
   </table>
