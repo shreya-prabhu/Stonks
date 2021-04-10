@@ -14,8 +14,9 @@
       </li>
       
       <li class="nav-item">
-          <a class="nav-link  text-white" href="/trade">Trade</a>
+        <a class="nav-link text-white" href="/transactions">My Transactions</a>
       </li>
+      
 
       <li class="nav-item">
           <a class="nav-link  text-white" href="/explorestocks">Explore Stocks</a>
@@ -27,15 +28,15 @@
 
     </ul>
 </nav>
-
-<div class="container-lg">
-  <br><br>
-  <div class="card" style="width: 70rem;">
+<body  style="background-color: 	#383838; color: white;">
+<div class="container-sm">
+  <br><br><br>
+  <div class="card" style="background-color:#585858;color: white; width: 29rem; margin-left: 30%;">
     <div class="card-body">
       
-      <h5 class="card-title"> Name : {{ account['FName']}} </h5>
-      <h6 class="card-subtitle mb-2 text-muted"> username: {{account['username']}} </h6>
-      <table class="table table-bordered">
+      <h5 class="card-title" style="text-align: center;"> Profile Details </h5>
+      <br>
+      <table class="table" style="background-color:#585858;color: white; margin-left: 13%; width: max-content;">
         <thead>
           <!-- <tr>
             <th scope="col">Field</th>
@@ -45,40 +46,41 @@
         </thead>
         <tbody>
           <tr>
-            <th scope="row">DP ID</th>
+            <th scope="row">Name &emsp;&emsp;</th>
+            <td> {{ account['FName']}}&emsp;&emsp;</td>
+          </tr>
+          <tr>
+            <th scope="row">Username &emsp;&emsp;</th>
+            <td> {{account['username']}}</td>
+          </tr>
+          <tr>
+            <th scope="row">DP ID &emsp;&emsp;</th>
             <td>{{account['DP_ID']}}</td>
           </tr>
           <tr>
-            <th scope="row">AADHAR No</th>
+            <th scope="row">AADHAR No &emsp;&emsp;</th>
             <td>{{account['aadhar_no']}}</td>
           </tr>
           <tr>
-            <th scope="row">PAN No</th>
+            <th scope="row">PAN No &emsp;&emsp;</th>
             <td colspan="2">{{account['pan_no']}}</td>
           </tr>
 
           <tr>
-            <th scope="row">Security Code</th>
+            <th scope="row">Security Code &emsp;&emsp;</th>
             <td colspan="2">{{account['security_code']}}</td>
           </tr>
 
           <tr>
-            <th scope="row">Phone No</th>
+            <th scope="row">Phone No&emsp;&emsp;</th>
             <td colspan="2">{{account['phone_no']}}</td>
           </tr>
         </tbody>
       </table>
-      <!-- <ul class="list-group list-group-flush">
-        <li class="list-group-item">DP ID : {{account['DP_ID']}}</li>
-        <li class="list-group-item">AADHAR No :{{account['aadhar_no']}} </li>
-        <li class="list-group-item">PAN No :  {{account['pan_no']}}</li>
-        <li class="list-group-item">Security Code :  {{account['security_code']}}</li>
-        <li class="list-group-item">Phone No :  {{account['phone_no']}}</li> -->
-
       </ul>
-
-      <div class="card-footer">
-        <a href="/update_client" role= "button" class="btn btn-info">Update Profile</a>
+      <br>
+      <div>
+        <a href="/update_client" role= "button" class="btn btn-info" style="margin-left: 35%;">Update Profile</a><br><br>
       </div>
       
     </div>
@@ -86,5 +88,5 @@
 
 </div>
 
-
+</body>
 </html>

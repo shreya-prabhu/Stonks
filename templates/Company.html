@@ -31,20 +31,26 @@
 </nav>
 
 <title>Hello from Stonks</title>
-<body>
-<h1 align="center"> List of companies</h1>
-<br/>
-<br/>
-<table style="width:100%">
-  <tr>   <th>Record:</th>  <th>Company Name</th>  <th>SecurityNo</th>
-<th>  Limited_Stock_Exchange </th><th> No_of_shares </th></tr>
+<body style="background-color: 	#383838; color: white;">
+  <br><br>
+<h1 style="text-align:center;"> List of companies</h1>
+
+<table class="table" style="background-color:#585858;color: white; margin-left: 23%; width: auto; text-align: center;">
+  <tr>   
+    <th scope="row">&emsp;&emsp; Record:</th>  
+    <th scope="row">&emsp;&emsp; Company Name</th>  
+    <th scope="row">&emsp;&emsp; SecurityNo</th>
+    <th scope="row">&emsp;&emsp; Limited_Stock_Exchange </th>
+    <th scope="row">&emsp;&emsp; No_of_shares&emsp; </th></tr>
   {%for i in range(0, len)%}
 
 
-   <tr>   <td>{{i+1}}</td>   <td>{{ (account[i])['CName'] }}</td>
-      <td>{{ (account[i])['SecurityNo'] }}</td>
-       <td>{{ (account[i])['Limited_Stock_Exchange'] }}</td>
-        <td>{{ (account[i])['No_of_shares'] }}</td>
+   <tr>   
+     <td colspan="1">{{i+1}}</td>   
+     <td colspan="1">{{ (account[i])['CName'] }}</td>
+      <td colspan="1">&emsp;{{ (account[i])['SecurityNo'] }}</td>
+       <td colspan="1">{{ (account[i])['Limited_Stock_Exchange'] }}</td>
+        <td colspan="1">{{ (account[i])['No_of_shares'] }}</td>
   </tr>
 
 
@@ -52,6 +58,5 @@
   {%endfor%}
 </table>
 
- </tr>
 </body>
 </html>

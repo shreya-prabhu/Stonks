@@ -23,82 +23,48 @@
 
     </ul>
 </nav>
-
-<div class="content" align="center">
-    <div class="topbar">
-        <h2>Welcome!! You are in Update Page!! </h2>                        
-    </div></br></br>
+<body style="background-color: 	#383838; color: white;">
+<div class="content" >
+  <br><br>
     <div class="contentbar">
-      <h1>Fill Your Details to Update</h1></br>
-      <form action="{{ url_for('update') }}" method="post">
+      <h3 style="text-align: center;">Fill Your Details to Update</h3><br>
+      <div class="container-sm" style="margin-left:26%;">
+      <form action="{{ url_for('update_client') }}" method="post">
         <div class="row mb-3">
             <label for="username3" class="col-sm-2 col-form-label">Username</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" placeholder="Username" id="username3" name="username" value="{{request.form.username }}" required>
+              <input type="text" class="form-control" placeholder="Username" id="username3" name="username" value="{{request.form.username }}" required style="background-color:#282828;color: white; opacity: 50%;">
             </div>
           </div>
   
           <div class="row mb-3">
             <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-5">
-              <input type="password" class="form-control" placeholder="Password" id="inputPassword3" name="password" value="{{request.form.password}}" required>
+              <input type="password" class="form-control" placeholder="Password" id="inputPassword3" name="password" value="{{request.form.password}}" required style="background-color:#282828;color: white; opacity: 50%;">
             </div>
           </div>
     
         <div class="row mb-3">
           <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
           <div class="col-sm-5">
-            <input type="email" class="form-control" placeholder="Email" id="inputEmail3" name="email" value="{{request.form.email }}" required>
+            <input type="email" class="form-control" placeholder="Email" id="inputEmail3" name="email" value="{{request.form.email }}" required style="background-color:#282828;color: white; opacity: 50%;">
           </div>
         </div>
 
         <div class="row mb-3">
           <label for="phonenumber3" class="col-sm-2 col-form-label">Phone number</label>
           <div class="col-sm-5">
-            <input type="tel" class="form-control" placeholder="Phone Number" id="phonenumber3" name="phonenumber" value="{{request.form.phonenumber}}" required>
+            <input type="tel" class="form-control" placeholder="Phone Number" id="phonenumber3" name="phonenumber" value="{{request.form.phonenumber}}" required style="background-color:#282828;color: white; opacity: 50%;">
           </div>
         </div>
+        <br>
+        <br>
 
-        
-    
-        <div class="row mb-3">
-          <label for="dpid3" class="col-sm-2 col-form-label">DP ID</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="DP ID" id="dpid3" name="dpid" value="{{request.form.dpid}}"required>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label for="bankname3" class="col-sm-2 col-form-label">Bank Name</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="Name of the Bank" id="bankname3" name="bankname" value="{{request.form.bankname}}"required>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label for="bankacc3" class="col-sm-2 col-form-label">Bank Account Number</label>
-          <div class="col-sm-5">
-            <input type="number" class="form-control" placeholder="Bank Account Number" id="bankacc3" name="bankacc" value="{{request.form.bankacc}}"required>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label for="bankifsc3" class="col-sm-2 col-form-label">Bank IFSC Number</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="IFSC Number" id="bankacc3" name="bankifsc" value="{{request.form.bankifsc}}"required>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label for="acctype3" class="col-sm-2 col-form-label">Account Type</label>
-          <div class="col-sm-5">
-            <input type="text" class="form-control" placeholder="Account Type" id="bankacc3" name="banktype" value="{{request.form.banktype}}"required>
-          </div>
-        </div>
-
-        <input class="btn btn-primary" type="submit" value="Update">
+        <input class="btn btn-primary" type="submit" value="Update" style="margin-left: 24%;">
       </form>                    
     </div>  
       
+  </div>
 </div>
-
+</body>
+</html>

@@ -28,6 +28,8 @@
     
       </ul>
       </nav>
+      <br><br>
+      <body  style="background-color: 	#383838; color: white;">
       <div class="container-sm" align-items-center><br><br>
       <h1 style="text-align: center;">Your Transactions</h1><br><br>
       <!-- <h3>Total Bought : buy</h3>
@@ -36,8 +38,8 @@
       
         <br>
         {% for i in companies %} 
-        <h4> Your Transactions under {{i['CName']}}</h4>
-      <table class="table table-hover table-dark">
+        <h5> Your Transactions under {{i['CName']}}:</h5><br>
+      <table class="table "style="background-color:#585858;color: white; opacity: 70%;">
         
         <thead>
       <tr>
@@ -78,4 +80,5 @@
   <br>
   {% endfor %}
   </div>
+</body>
 </html>
