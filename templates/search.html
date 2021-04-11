@@ -4,31 +4,36 @@
 <html>
   <nav class="navbar navbar-dark bg-success">
   <ul class=" nav nav-tabs" >
-    <li class="nav-item">
-        <a class="nav-link active text-dark" aria-current="page" href="#">Dashboard</a>
+    <li >
+  <h2>  &nbsp; Stonks   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </h2>
     </li>
-    <li class="nav-item">
-      <a class="nav-link text-white" href="/admin_profile">My Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link text-white" href="/insert">Insert</a>
-    </li>
+  <li class="nav-item"  >
+      <a class="nav-link text-white" href="/admin_dashboard" >Dashboard</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-white" href="/admin_profile">My Profile</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-white" href="/Company">Explore</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-white" href="/insert">Insert</a>
+  </li>
 
-    <li class="nav-item">
-        <a class="nav-link text-white" href="/update">Update</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-white" href="/Company">Company</a>
-    </li>
+  <li class="nav-item">
+      <a class="nav-link text-white" href="/update">Update</a>
+  </li>
 
-    <li class="nav-item">
-        <a class="nav-link text-white" href="/Delete">Delete</a>
-    </li>
-  
+  <li class="nav-item">
+      <a class="nav-link text-white" href="/Delete">Delete</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active text-dark" aria-current="page" href="#">Search</a>
+  </li>
 
-    <li class="nav-item">
-        <a class="nav-link text-white" href="/">Logout</a>
-    </li>
+  <li class="nav-item">
+      <a class="nav-link text-white" href="/">Logout</a>
+  </li>
 
   </ul>
 </nav>
@@ -54,15 +59,15 @@
 
         <div class="container-sm">
         <table class="table" style="background-color:#585858;color: white;opacity: 80%;">
-          <tr>   
-            <th scope="row">Company Name</th>  
+          <tr>
+            <th scope="row">Company Name</th>
             <th scope="row">SecurityNo</th>
             <th scope="row">  Limited_Stock_Exchange </th>
             <th scope="row"> No_of_shares </th></tr>
           {% for item in data %}
 
 
-           <tr>  
+           <tr>
               <td colspan="1">{{item['CName']}}</td>
               <td colspan="1">{{item['SecurityNo']}}</td>
                <td colspan="1">{{ item['Limited_Stock_Exchange'] }}</td>

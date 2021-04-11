@@ -10,6 +10,9 @@
   </style>
   <nav class="navbar navbar-dark bg-success">
   <ul class=" nav nav-tabs" >
+    <li >
+  <h2>  &nbsp; Stonks   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </h2>
+    </li>
     <li class="nav-item">
         <a class="nav-link active text-dark" aria-current="page" href="/dashboard">Dashboard</a>
     </li>
@@ -19,7 +22,7 @@
     <li class="nav-item">
       <a class="nav-link text-white" href="/transactions">My Transactions</a>
     </li>
-  
+
 
     <li class="nav-item">
         <a class="nav-link text-white" href="/explorestocks">Explore Stocks</a>
@@ -63,7 +66,7 @@
                 <SELECT name="name" id="customDropdown" style="background-color:#282828;color: white; opacity: 50%;width:35%; height:50% ;">
                  {% for j in stocks %}
                 <OPTION value="{{j['SCode']}}">{{j['SCode']}}</OPTION>
-                 
+
                  {% endfor %}
                  </SELECT>
                  </div>
@@ -76,5 +79,5 @@
             <input class="btn btn-primary" type="submit" value="Buy" style="margin-left: 10%;">
             </form>
             </div>
-</body>        
+</body>
 </html>
