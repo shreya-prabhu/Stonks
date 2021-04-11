@@ -52,6 +52,8 @@ def login_admin():
 
         cursor.execute('SELECT * FROM client_profile WHERE username = % s AND password = % s', (username, password, ))
         account = cursor.fetchone()
+        print("hi")
+        print(account)
         if account:
             session['loggedin'] = True
             session['username'] = request.form['username']
@@ -139,27 +141,29 @@ def profile():
         cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
         account = cursor.fetchone()
         return render_template("profile.html", account = account)
-    
+
 @app.route("/update_client", methods =['GET', 'POST'])
 def update_client():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
     msg = ''
-    if 'loggedin' in session:
+    if session['loggedin']==True:
         if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
             username = request.form['username']
             password = request.form['password']
             email = request.form['email']
             phonenumber = request.form['phonenumber']
             cursor = mysql.connection.cursor()
-            cursor.execute('SELECT * FROM client_profile WHERE username = %s', [username])
+            cursor.execute('SELECT * FROM client_profile WHERE username = %s', [session['username']])
             account = cursor.fetchone()
             if account:
                 if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
                     msg = 'Invalid email address !'
                 else:
+                    print("entering update")
+
                     cursor.execute('UPDATE client_profile SET  username =%s, password =%s, email_id =%s,phone_no =%s WHERE username =% s',(username,password,email,phonenumber,session['username']  ))
+                    print("update done")
                     mysql.connection.commit()
+                    session['username']=username
                     msg = 'You have successfully updated !'
                     return redirect(url_for('dashboard'))
         elif request.method == 'POST':
