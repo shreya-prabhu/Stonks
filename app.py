@@ -60,8 +60,18 @@ def login_admin():
             return redirect("http://localhost:5000/dashboard", code=302)
     return render_template('login.html')
 
+
+
+@app.route("/admin_dashboard")
+def admin_dash():
+    if 'loggedin' in session:
+        return render_template('admin_dashboard.html')
+
+
 @app.route("/logout")
 def logout():
+    session['loggedin']=False
+    session['username']=""
     return render_template('index.html')
 
 @app.route("/dashboard")
@@ -81,23 +91,26 @@ def explorestocks():
 
 @app.route("/buy_stock")
 def buy_stock():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT SCode, Price FROM stocks;')
-    stocklist = cursor.fetchall()
-    return render_template('buy.html', stocks=stocklist)
+    if session['loggedin']==False:
+        return redirect('login')
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT SCode, Price FROM stocks;')
+        stocklist = cursor.fetchall()
+        return render_template('buy.html', stocks=stocklist)
 
 @app.route("/sell_stock")
 def sell_stock():
     if 'loggedin' not in session:
         return redirect("http://localhost:5000/login")
-    cursor = mysql.connection.cursor()
-    username =session['username']
-    cursor.execute('SELECT stock_customer.SCode, quantity, Price FROM stock_customer INNER JOIN stocks ON stock_customer.SCode = stocks.SCode where stock_customer.CName = %s;',[username])
-    stocklist = cursor.fetchall()
-    print(stocklist)
-    return render_template('sell.html', stocks =stocklist)
+
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        username =session['username']
+        cursor.execute('SELECT stock_customer.SCode, quantity, Price FROM stock_customer INNER JOIN stocks ON stock_customer.SCode = stocks.SCode where stock_customer.CName = %s;',[username])
+        stocklist = cursor.fetchall()
+        print(stocklist)
+        return render_template('sell.html', stocks =stocklist)
 
 @app.route("/trade")
 def trade():
@@ -183,6 +196,9 @@ def admin_profile():
 
 @app.route("/Company")
 def company_1():
+    if session['loggedin']==False:
+        return redirect('login')
+
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         cursor.execute('SELECT * FROM CompanyDB')
@@ -190,7 +206,7 @@ def company_1():
 
         return render_template("Company.html", account = account,len=len(account))
 
-    return redirect('login')
+
 #endpoint for search
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -293,8 +309,8 @@ def client_insert():
 
 @app.route('/buy_check', methods=['GET', 'POST'])
 def buy_check():
-    if 'loggedin' not in session:
-        return redirect("http://localhost:5000/login")
+    if session['loggedin']==False:
+        return redirect('login')
     if request.method == "POST":
         cursor = mysql.connection.cursor()
         username = session['username']
