@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+DROP DATABASE if exists stonks;
+>>>>>>> 68be3a6f9377437af2772d51281b9bffc0f4661b
 CREATE DATABASE if not exists stonks;
 USE stonks;
 DROP TABLE if exists admin_profile;
