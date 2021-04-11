@@ -162,6 +162,8 @@ def update_client():
                     mysql.connection.commit()
                     msg = 'You have successfully updated !'
                     return redirect(url_for('dashboard'))
+        elif request.method == 'POST':
+            msg = 'Please fill out the form !'
         return render_template("update_client.html", msg = msg)
     return redirect(url_for('login'))
 
