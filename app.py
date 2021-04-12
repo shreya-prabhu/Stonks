@@ -133,6 +133,7 @@ def transactions():
         cursor.execute(' SELECT S.CName from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName = %s;',[username])
         companieslist = cursor.fetchall()
         comp = []
+        transactionlist=[]
         for c in companieslist:
             if c not in comp:
                 comp.append(c)
@@ -146,6 +147,7 @@ def transactions():
                 from stocks S  left join transactions T on (T.Scode = S.Scode) where T.CName=%s order by Company_Name',[username]);
             transactionlist = cursor.fetchall()
         return render_template('transactions.html', transactions = transactionlist, companies = comp)
+
 
 
 
@@ -334,6 +336,7 @@ def buy_check():
             num1 =int(num1)
             stockid = request.form.get('name')
             stockid= str(stockid)
+            print(username)
             cursor.execute('SELECT CName FROM stocks WHERE SCode = %s ', [stockid])
             query1 = cursor.fetchone()
             company= query1['CName']
@@ -344,6 +347,7 @@ def buy_check():
                 num2= number-num1
                 cursor.execute('UPDATE CompanyDB SET No_of_shares = %s WHERE CName =%s;',(num2,company))
                 mysql.connection.commit()
+                cursor.execute('SELECT quantity FROM stock_customer WHERE CName = %s AND SCode =%s', (username,stockid))
                 query3=cursor.fetchone()
                 if query3:
                     num2 = int(query3['quantity'])
