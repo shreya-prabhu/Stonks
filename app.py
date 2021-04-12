@@ -89,7 +89,7 @@ def explorestocks():
         return redirect('login')
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT SCode, CName, Price FROM stocks;')
+        cursor.execute('SELECT SCode, stocks.CName as CName, Price , No_of_shares FROM stocks INNER JOIN CompanyDB on CompanyDB.CName= stocks.CName;')
         stocklist = cursor.fetchall()
         return render_template('explorestocks.html', stocks = stocklist)
 
@@ -99,7 +99,7 @@ def buy_stock():
         return redirect('login')
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT SCode, Price FROM stocks;')
+        cursor.execute('SELECT SCode, stocks.CName as CName, Price , No_of_shares FROM stocks INNER JOIN CompanyDB on CompanyDB.CName= stocks.CName;')
         stocklist = cursor.fetchall()
         return render_template('buy.html', stocks=stocklist)
 
@@ -107,7 +107,6 @@ def buy_stock():
 def sell_stock():
     if session['loggedin']==False:
         return redirect('login')
-
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         username =session['username']
