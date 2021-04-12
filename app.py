@@ -175,6 +175,9 @@ def update_client():
                 password = request.form['password']
                 email = request.form['email']
                 phonenumber = request.form['phonenumber']
+                if(len(phonenumber)!=10):
+                    msg='Enter a 10 digit number'
+                    return render_template('update_client.html',msg=msg)
                 cursor = mysql.connection.cursor()
                 cursor.execute('SELECT * FROM client_profile WHERE username = %s', [session['username']])
                 account = cursor.fetchone()
