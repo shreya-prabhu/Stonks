@@ -36,22 +36,26 @@
 </nav>
 <br>
 <a role="button" style="margin-left:10px;" class="btn btn-info" href="/dashboard">Back</a>
-<br><br><br><br>
+<br><br>
 <body  style="background-color: 	#383838; color: white;">
   <h2 style="text-align: center;">Stock codes and Prices</h2><br>
-    <div class="container-sm-1" style="margin-left: 38%;">
+    <div class="container-sm-1" style="margin-left: 25%;">
         <table style="width: auto;background-color:#585858;text-align: center; color: white; opacity: 70%;" class="table">
           <thead >
         <tr >
-          <th scope="col" class="col-sm-4" >&nbsp;&nbsp;Stock ID </th>
-          <th scope="col" class="col-sm-4" >Price Per Stock </th>
+          <th scope="col" class="col-sm-2" >Stock ID </th>
+          <th scope="col" class="col-sm-2" >Price Per Stock </th>
+          <th scope="col" class="col-sm-2">&nbsp;Company</th>
+          <th scope="col" class="col-sm-2">&nbsp;Quantity</th>
         </tr>
       </thead>
       <tbody>
         <tr >
         {% for j in stocks %}
-        <td >&nbsp;&nbsp;{{j['SCode']}}</td>
-        <td>{{j['Price']}}</td>
+        <td >{{j['SCode']}}</td>
+          <td>{{j['Price']}}</td>
+          <td>{{j['CName']}}</td>
+          <td>{{j['No_of_shares']}}</td>
       </tr>
       {% endfor %}
     </tbody>

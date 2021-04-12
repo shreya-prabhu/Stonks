@@ -35,6 +35,7 @@
             <th scope="col" class="col-sm-2" >Stock ID </th>
             <th scope="col" class="col-sm-2" >Price Per Stock </th>
             <th scope="col" class="col-sm-2">&nbsp;Company</th>
+            <th scope="col" class="col-sm-2">&nbsp;Quantity</th>
           </tr>
         </thead>
         <tbody>
@@ -43,6 +44,7 @@
           <td >{{j['SCode']}}</td>
           <td>{{j['Price']}}</td>
           <td>{{j['CName']}}</td>
+          <td>{{j['No_of_shares']}}</td>
         </tr>
         {% endfor %}
       </tbody>
