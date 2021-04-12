@@ -432,6 +432,50 @@ def sell_check():
                 mysql.connection.commit()
                 return redirect("http://localhost:5000/transactions", code=302)
             return redirect("http://localhost:5000/dashboard", code=302)
+@app.route('/insert_stocks', methods=['GET', 'POST'])
+def insert_stock():
+    if 'loggedin' not in session:
+        return redirect("http://localhost:5000/login")
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        SCode = request.form['SCode']
+        CompanyName = request.form['CompanyName']
+        Description = request.form['Description']
+        Price = request.form['Price']
+        cursor.execute('INSERT INTO stocks VALUES (  %s, %s, %s, %s)', (SCode, CompanyName, Description, Price, ))
+        mysql.connection.commit()
+        return redirect("http://localhost:5000/search", code=302)
+    return render_template('insert_stocks.html')
+@app.route("/delete_stocks", methods=['GET', 'POST'])
+def delete_stock():
+    if session['loggedin']==False:
+        return redirect('login')
+    if 'loggedin' in session:
+        if request.method == "POST":
+            cursor = mysql.connection.cursor()
+            SCode = request.form['SCode']
+            cursor.execute('DELETE from stocks WHERE SCode = %s', [SCode])
+            mysql.connection.commit()
+            return redirect("http://localhost:5000/Company", code=302)
+        return render_template('delete_stocks.html')
+@app.route("/update_stocks", methods=['GET', 'POST'])
+def update_stock():
+    if session['loggedin']==False:
+        return redirect('login')
+    if 'loggedin' in session:
+        msg=""
+        if request.method == 'POST':
+            SCode = request.form['SCode']
+            Price = request.form['Price']
+            cursor = mysql.connection.cursor()
+
+            cursor.execute('UPDATE stocks SET  Price =% sWHERE SCode =% s',(Price,SCode))
+            mysql.connection.commit()
+            msg = 'You have successfully updated !'
+        elif request.method == 'POST':
+            msg = 'Please fill out the form !'
+        return render_template("update_stocks.html", msg = msg)
+    return render_template('update_stocks.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
