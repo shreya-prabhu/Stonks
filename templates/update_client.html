@@ -29,6 +29,9 @@
     </ul>
 </nav>
 <body style="background-color: 	#383838; color: white;">
+  {% if msg!= null%}
+  <p id="message" style="display: none;">{{msg}}</p>
+  {%endif%}
 <div class="content" >
   <br><br>
     <div class="contentbar">
@@ -71,5 +74,10 @@
 
   </div>
 </div>
+<script>
+  x=document.getElementById("message").innerHTML
+  if(x)
+  alert(x);
+</script>
 </body>
 </html>

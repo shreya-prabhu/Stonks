@@ -4,10 +4,15 @@
 <html>
 
   <div class="w3-container w3-teal">
-		<h1>Stonks</h1>
+		<h2>Stonks</h2>
 	</div>
     <br>
 <body style="background-color: 	#383838; color: white;">
+
+  {% if msg!= null%}
+  <p id="message" style="display: none;">{{msg}}</p>
+  {%endif%}
+
   <h2 style="text-align: center;">Registration</h2><br><br>
     <div class="container-sm" style="margin-left:26%;">
         <form action="{{ url_for('client_insert') }}" method="post">
@@ -57,21 +62,21 @@
             <div class="row mb-3">
               <label for="aadharnumber3" class="col-sm-2 col-form-label">Aadhar Number</label>
               <div class="col-sm-5">
-                <input type="number" class="form-control" placeholder="Aadhar Number" id="aadharnumber3" name="aadharnumber" value="{{request.form.aadharnumber }}" required style="background-color:#282828;color: white; opacity: 50%;">
+                <input type="number" class="form-control" placeholder="Aadhar Number" id="aadharnumber3" minlength="12" maxlength="12" name="aadharnumber" value="{{request.form.aadharnumber }}" required style="background-color:#282828;color: white; opacity: 50%;">
               </div>
             </div>
 
             <div class="row mb-3">
               <label for="pannumber3" class="col-sm-2 col-form-label">PAN Number</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="PAN Number" id="pannumber3" name="pannumber" value="{{request.form.pannumber}}" required style="background-color:#282828;color: white; opacity: 50%;">
+                <input type="text" minlength="10" maxlength="10" class="form-control" placeholder="PAN Number" id="pannumber3" name="pannumber" value="{{request.form.pannumber}}" required style="background-color:#282828;color: white; opacity: 50%;">
               </div>
             </div>
 
             <div class="row mb-3">
               <label for="securitycode3" class="col-sm-2 col-form-label">Security Code</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="Security Code" id="securitycode3" name="securitycode" value="{{request.form.securitycode}}" required style="background-color:#282828;color: white; opacity: 50%;">
+                <input type="password" class="form-control" placeholder="Security Code" id="securitycode3" name="securitycode" value="{{request.form.securitycode}}" required style="background-color:#282828;color: white; opacity: 50%;">
               </div>
             </div>
 
@@ -99,23 +104,28 @@
             <div class="row mb-3">
               <label for="bankifsc3" class="col-sm-2 col-form-label">Bank IFSC Number</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="IFSC Number" id="bankacc3" name="bankifsc" value="{{request.form.bankifsc}}"required style="background-color:#282828;color: white; opacity: 50%;">
+                <input type="text" class="form-control" placeholder="IFSC Number" id="bankifsc3" name="bankifsc" value="{{request.form.bankifsc}}"required style="background-color:#282828;color: white; opacity: 50%;">
               </div>
             </div>
 
             <div class="row mb-3">
               <label for="acctype3" class="col-sm-2 col-form-label">Account Type</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="Account Type" id="bankacc3" name="banktype" value="{{request.form.banktype}}"required style="background-color:#282828;color: white; opacity: 50%;">
+                <input type="text" class="form-control" placeholder="Account Type" id="acctype3" name="banktype" value="{{request.form.banktype}}"required style="background-color:#282828;color: white; opacity: 50%;">
               </div>
             </div>
             <br>
             <h6 style="margin-left: 18%;">Already registered? <a href="/login"> Login Now </a></h6><br>
 
-            <input class="btn btn-primary" type="submit" value="Sign Up" style="margin-left: 24%;"><br><br><br><br>
+            <input class="btn btn-primary" type="submit" value="Sign Up" style="margin-left: 24%;" ><br><br><br><br>
            <!-- <p><button class="btn btn-primary">Sign Up</button></p>-->
 
           </form>
     </div>
+    <script>
+      x=document.getElementById("message").innerHTML
+      if(x)
+      alert(x);
+    </script>
     </body>
   </html>
