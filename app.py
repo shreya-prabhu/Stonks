@@ -306,9 +306,15 @@ def client_insert():
             dob = request.form['dob']
             email = request.form['email']
             phonenumber = request.form['phonenumber']
+            if(len(phonenumber)!=10):
+                msg='Enter a 10 digit number'
+                return render_template('register.html',msg=msg)
             username = request.form['username']
             password = request.form['password']
             aadharnumber = request.form['aadharnumber']
+            if(len(aadharnumber))!=12:
+                msg='Enter a valid Aadhar number'
+                return render_template('register.html',msg=msg)
             pannumber = request.form['pannumber']
             securitycode = request.form['securitycode']
             dpid = request.form['dpid']
