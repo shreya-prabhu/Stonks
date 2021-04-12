@@ -476,6 +476,16 @@ def update_stock():
             msg = 'Please fill out the form !'
         return render_template("update_stocks.html", msg = msg)
     return render_template('update_stocks.html')
+@app.route("/stock_view")
+def viewstock():
+    if session['loggedin']==False:
+        return redirect('login')
 
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT * FROM stocks')
+        account = cursor.fetchall()
+
+        return render_template("stock_view.html", account = account,len=len(account))
 if __name__ == "__main__":
     app.run(debug=True)
