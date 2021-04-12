@@ -15,8 +15,9 @@
     <a class="nav-link text-white" href="/Company">Explore</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active text-dark" aria-current="page" href="#">Insert</a>
+    <a class="nav-link text-white" href="/insert">Insert</a>
   </li>
+
 
   <li class="nav-item">
       <a class="nav-link text-white" href="/update">Update</a>
@@ -29,13 +30,13 @@
       <a class="nav-link text-white" href="/search">Search</a>
   </li>
   <li class="nav-item">
-      <a class="nav-link text-white" href="/insert_stocks">Add stocks</a>
-  </li>
-  <li class="nav-item">
-      <a class="nav-link text-white" href="/delete_stocks">Delete Stock</a>
+      <a class="nav-link active text-dark" aria-current="page"  href="#">Add stocks</a>
   </li>
   <li class="nav-item">
       <a class="nav-link text-white" href="/update_stocks">Update stock</a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link text-white" href="/delete_stocks">Delete Stock</a>
   </li>
   <li class="nav-item">
       <a class="nav-link text-white" href="/stock_view">View stock</a>
@@ -50,31 +51,32 @@
 <body style="background-color: 	#383838; color: white;">
   <br>
   <br>
-        <h1 style="text-align: center;">Company</h1><br><br>
+        <h1 style="text-align: center;">Stocks</h1><br><br>
         <form class="example" method="post" action="" style="max-width:1000px">
           <div class="container-sm" style="margin-left:48%;">
             <div class="row mb-3">
-              <label for="OCNAME" class="col-sm-4 col-form-label">Enter the Company Name: </label>
+              <label for="NSCODE" class="col-sm-4 col-form-label">Enter the SCode: </label>
               <div class="col-sm-5">
-                <input type="text" name="CompanyName" aria-label="OCNAME" placeholder="Company Name" id="oldCName" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
+                <input type="text" name="SCode" aria-label="NSCODE" placeholder=" SCode" id="SCode" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
               </div>
           </div>
-        <div class="row mb-3">
-          <label for="NSCODE" class="col-sm-4 col-form-label">Enter the Security No: </label>
-          <div class="col-sm-5">
-            <input type="text" name="SecurityNo" aria-label="NSCODE" placeholder=" Security No" id="SecurityNo" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
+            <div class="row mb-3">
+              <label for="OCNAME" class="col-sm-4 col-form-label">Enter the Company Name: </label>
+              <div class="col-sm-5">
+                <input type="text" name="CompanyName" aria-label="OCNAME" placeholder="Company Name" id="CompanyName" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
+              </div>
           </div>
-      </div>
+
       <div class="row mb-3">
-        <label for="NLSE" class="col-sm-4 col-form-label">Enter the Limited Stock Exchange:</label>
+        <label for="NLSE" class="col-sm-4 col-form-label">Enter the Description:</label>
         <div class="col-sm-5">
-          <input type="text" name="Limited_Stock_Exchange" aria-label="NLSE" placeholder=" Limited_Stock_Exchange " id="Limited_Stock_Exchange" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
+          <input type="text" name="Description" aria-label="NLSE" placeholder="Description " id="Description" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
         </div>
     </div>
     <div class="row mb-3">
-      <label for="NNS" class="col-sm-4 col-form-label">Enter the no of shares:</label>
+      <label for="NNS" class="col-sm-4 col-form-label">Enter the Price:</label>
       <div class="col-sm-5">
-        <input type="text" aria-label="NNS" name="No_of_shares" placeholder=" No_of_shares"  id="No_of_shares" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
+        <input type="text" aria-label="NNS" name="Price" placeholder="Price"  id="Price" required style="background-color:#282828;color: white; opacity: 50%;"></br></br>
       </div>
   </div>
   </div>

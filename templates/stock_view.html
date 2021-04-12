@@ -14,7 +14,7 @@
       <a class="nav-link text-white" href="/admin_profile" >My Profile</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active text-dark" aria-current="page" href="#">Explore</a>
+      <a class="nav-link text-white" href="/Company">Explore</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-white" href="/insert">Insert</a>
@@ -40,7 +40,7 @@
         <a class="nav-link text-white" href="/update_stocks">Update stock</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-white" href="/stock_view">View stock</a>
+        <a class="nav-link active text-dark" aria-current="page" href="#">View Stocks</a>
     </li>
     <li class="nav-item">
         <a class="nav-link text-white" href="/">Logout</a>
@@ -52,24 +52,24 @@
 <title>Hello from Stonks</title>
 <body style="background-color: 	#383838; color: white;">
   <br><br>
-<h1 style="text-align:center;"> List of companies</h1>
+<h1 style="text-align:center;"> List of Stocks</h1>
 
 <table class="table" style="background-color:#585858;color: white; margin-left: 23%; width: auto; text-align: center;">
   <tr>
     <th scope="row">&emsp;&emsp; Record:</th>
-    <th scope="row">&emsp;&emsp; Company Name</th>
-    <th scope="row">&emsp;&emsp; SecurityNo</th>
-    <th scope="row">&emsp;&emsp; Limited_Stock_Exchange </th>
-    <th scope="row">&emsp;&emsp; No_of_shares&emsp; </th></tr>
+    <th scope="row">&emsp;&emsp; Scode</th>
+    <th scope="row">&emsp;&emsp; CompanyName</th>
+    <th scope="row">&emsp;&emsp; Description </th>
+    <th scope="row">&emsp;&emsp; Price&emsp; </th></tr>
   {%for i in range(0, len)%}
 
 
    <tr>
      <td colspan="1">{{i+1}}</td>
-     <td colspan="1">{{ (account[i])['CName'] }}</td>
-      <td colspan="1">&emsp;{{ (account[i])['SecurityNo'] }}</td>
-       <td colspan="1">{{ (account[i])['Limited_Stock_Exchange'] }}</td>
-        <td colspan="1">{{ (account[i])['No_of_shares'] }}</td>
+     <td colspan="1">{{ (account[i])['SCode'] }}</td>
+      <td colspan="1">&emsp;{{ (account[i])['CName'] }}</td>
+       <td colspan="1">{{ (account[i])['SDescription'] }}</td>
+        <td colspan="1">{{ (account[i])['Price'] }}</td>
   </tr>
 
 
