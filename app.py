@@ -197,6 +197,7 @@ def update_client():
             return render_template("update_client.html", msg = msg)
     return redirect(url_for('login'))
 
+
 @app.route("/admin_profile")
 def admin_profile():
     if session['loggedin']==False:
@@ -299,37 +300,34 @@ def update():
 
 @app.route('/client_insert', methods=['GET', 'POST'])
 def client_insert():
-    if session['loggedin']==False:
-        return redirect('login')
-    if 'loggedin' in session:
-        if request.method == "POST":
-            cursor = mysql.connection.cursor()
-            fullname = request.form['fullname']
-            dob = request.form['dob']
-            email = request.form['email']
-            phonenumber = request.form['phonenumber']
-            if(len(phonenumber)!=10):
-                msg='Enter a 10 digit number'
-                return render_template('register.html',msg=msg)
-            username = request.form['username']
-            password = request.form['password']
-            aadharnumber = request.form['aadharnumber']
-            if(len(aadharnumber))!=12:
-                msg='Enter a valid Aadhar number'
-                return render_template('register.html',msg=msg)
-            pannumber = request.form['pannumber']
-            securitycode = request.form['securitycode']
-            dpid = request.form['dpid']
-            bankacc = request.form['bankacc']
-            bankname= request.form['bankname']
-            bankifsc = request.form['bankifsc']
-            banktype = request.form['banktype']
-            cursor.execute('INSERT INTO client_profile VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (fullname, dob, email, phonenumber, username, password, aadharnumber, pannumber, securitycode, dpid , bankacc))
-            mysql.connection.commit()
-            cursor.execute('INSERT INTO bank_details VALUES ( %s ,%s, %s, %s )' ,( bankname, bankacc, bankifsc, banktype))
-            mysql.connection.commit()
-            return redirect("http://localhost:5000/login", code=302)
-        return render_template('register.html')
+    if request.method == "POST":
+        cursor = mysql.connection.cursor()
+        fullname = request.form['fullname']
+        dob = request.form['dob']
+        email = request.form['email']
+        phonenumber = request.form['phonenumber']
+        if(len(phonenumber)!=10):
+            msg='Enter a 10 digit number'
+            return render_template('register.html',msg=msg)
+        username = request.form['username']
+        password = request.form['password']
+        aadharnumber = request.form['aadharnumber']
+        if(len(aadharnumber))!=12:
+            msg='Enter a valid Aadhar number'
+            return render_template('register.html',msg=msg)
+        pannumber = request.form['pannumber']
+        securitycode = request.form['securitycode']
+        dpid = request.form['dpid']
+        bankacc = request.form['bankacc']
+        bankname= request.form['bankname']
+        bankifsc = request.form['bankifsc']
+        banktype = request.form['banktype']
+        cursor.execute('INSERT INTO client_profile VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (fullname, dob, email, phonenumber, username, password, aadharnumber, pannumber, securitycode, dpid , bankacc))
+        mysql.connection.commit()
+        cursor.execute('INSERT INTO bank_details VALUES ( %s ,%s, %s, %s )' ,( bankname, bankacc, bankifsc, banktype))
+        mysql.connection.commit()
+        return redirect("http://localhost:5000/login", code=302)
+    return render_template('register.html')
 
 @app.route('/buy_check', methods=['GET', 'POST'])
 def buy_check():
