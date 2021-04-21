@@ -332,6 +332,9 @@ def client_insert():
             msg='Enter a valid Aadhar number'
             return render_template('register.html',msg=msg)
         pannumber = request.form['pannumber']
+        if not re.match(r'[A-Z]{5}[0-9]{4}[A-Z]{1}', pannumber):
+            msg = 'Invalid Pan Number !'
+            return render_template('register.html',msg=msg)
         securitycode = request.form['securitycode']
         dpid = request.form['dpid']
         bankacc = request.form['bankacc']
