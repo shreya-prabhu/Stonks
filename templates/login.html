@@ -13,6 +13,9 @@
       </head>
       <body style="background-color: 	#383838; color: white;">
         <h2 style="text-align: center;">Login</h2><br><br>
+        {% if msg!= null%}
+        <p id="message" style="display: none;">{{msg}}</p>
+        {%endif%}
           <div class="container-sm" style="margin-left:32%;">
           <br>
           <form action="" method="post">
@@ -39,5 +42,10 @@
             <p class="error"><strong>Error:</strong> {{ error }}
           {% endif %}
         </div>
+        <script>
+          x=document.getElementById("message").innerHTML
+          if(x)
+          alert(x);
+        </script>
       </body>
     </html>
