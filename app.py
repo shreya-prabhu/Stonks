@@ -269,10 +269,21 @@ def delete():
         if request.method == "POST":
             cursor = mysql.connection.cursor()
             CompanyName1 = request.form['CompanyName']
+            cursor.execute('DELETE FROM transactions where CName =%s',[CompanyName1])
+            cursor.execute("SELECT * FROM stocks WHERE CName = %s", [CompanyName1])
+            account = cursor.fetchall()
+            for i in account:
+                Scode1=account[1]
+                cursor.execute("DELETE FROM stock_customer where Scode = %s",[Scode1])
+            cursor.execute("DELETE FROM stocks WHERE CName = %s", [CompanyName1])
+
             cursor.execute('DELETE from CompanyDB WHERE CName = %s', [CompanyName1])
+
+
             mysql.connection.commit()
             return redirect("http://localhost:5000/Company", code=302)
         return render_template('Delete.html')
+
 
 @app.route("/update", methods =['GET', 'POST'])
 def update():
@@ -452,10 +463,12 @@ def delete_stock():
         if request.method == "POST":
             cursor = mysql.connection.cursor()
             SCode = request.form['SCode']
+            cursor.execute('DELETE from stock_customer WHERE SCode = %s', [SCode])
             cursor.execute('DELETE from stocks WHERE SCode = %s', [SCode])
             mysql.connection.commit()
             return redirect("http://localhost:5000/Company", code=302)
         return render_template('delete_stocks.html')
+
 @app.route("/update_stocks", methods=['GET', 'POST'])
 def update_stock():
     if session['loggedin']==False:
