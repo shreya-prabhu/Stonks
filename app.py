@@ -301,7 +301,12 @@ def update():
             cursor = mysql.connection.cursor()
             cursor.execute('SELECT * FROM CompanyDB WHERE CName = % s', (CName1, ))
             account = cursor.fetchone()
+
             cursor.execute('UPDATE companydb SET  CName =% s, SecurityNo =% s, Limited_Stock_Exchange =% s, No_of_shares =% s WHERE CName =% s',(CName2, SecurityNo1, Limited_Stock_Exchange1, No_of_shares1,CName1))
+            cursor.execute('Update stock_customer SET CName= %s WHERE CName=%s',(CName2,CName1))
+            cursor.execute('Update stocks SET CName= %s WHERE CName=%s',(CName2,CName1))
+            cursor.execute('Update transactions SET CName= %s WHERE CName=%s',(CName2,CName1))
+
             mysql.connection.commit()
             msg = 'You have successfully updated !'
         elif request.method == 'POST':
