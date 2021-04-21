@@ -35,6 +35,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login_admin():
     error = None
+    msg=''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -58,7 +59,8 @@ def login_admin():
             session['loggedin'] = True
             session['username'] = request.form['username']
             return redirect("http://localhost:5000/dashboard", code=302)
-    return render_template('login.html')
+        msg='Enter Valid Credentials!'
+    return render_template('login.html',msg=msg)
 
 
 
